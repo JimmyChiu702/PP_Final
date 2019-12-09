@@ -15,11 +15,11 @@ int main()
     int nMiniBatch      = 10;
     float learningRate     = 0.1;
     
-    int nTrainingSet    = 60000;
-    int nTestSet        = 10000;
+    int nTrainingSet    = 600;
+    int nTestSet        = 100;
     
     float errMinimum = 0.01;    
-    int maxEpoch = 1000;
+    int maxEpoch = 1;
     
     //Allocate
     float **inputTraining			= new float*[nTrainingSet];
@@ -145,6 +145,10 @@ int main()
     {
         delete [] desiredOutputTraining[i];
         delete [] inputTraining[i];
+    }
+
+    for (int i = 0; i < nTestSet; i++)
+    {
         delete [] desiredOutputTest[i];
         delete [] inputTest[i];
     }
