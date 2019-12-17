@@ -1,6 +1,7 @@
 #ifndef MLP_Network_H
 #define MLP_Network_H
-#include "MLP_Layer.h"
+#include "MLP_HiddenLayer.h"
+#include "MLP_OutputLayer.h"
 
 
 #include <iostream>
@@ -14,22 +15,16 @@ using namespace std;
 class MLP_Network {
     
 private:
-    MLP_Layer *layerNetwork;
-    
-    
-    int nTrainingSet;
-    int nInputUnit;
-    int nHiddenUnit;
-    int nOutputUnit;
-    int nHiddenLayer;
+    int nInputUnit = 784;
+    int nHiddenUnit = 512;
+    int nOutputUnit = 10;
+    int nHiddenLayer = 1;
 
+    MLP_HiddenLayer HiddenLayer;
+    MLP_OutputLayer OutputLayer;
 public:
     MLP_Network(){}
-    ~MLP_Network(){Delete();}
-
-    void Allocate(int nInputUnit,   int nHiddenUnit, int nOutputUnit, int nHiddenLayer,
-                  int nTrainingSet);
-    void Delete();
+    ~MLP_Network(){}
     
     void Train();
     void ForwardPropagateNetwork(float* inputNetwork);
@@ -38,6 +33,10 @@ public:
     float CostFunction(float* inputNetwork,float* desiredOutput);
     
     float CalculateResult(float* inputNetwork,float* desiredOutput);
+
+    void test() {
+        HiddenLayer.test();
+    }
 };
 
 #endif

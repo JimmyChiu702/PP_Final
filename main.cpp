@@ -1,7 +1,6 @@
 #include <omp.h>
 
 #include "MLP_Network.h"
-#include "MLP_Layer.h"
 #include "MNIST.h"
 
 int main()
@@ -13,13 +12,13 @@ int main()
     
     int nHiddenLayer    = 1;
     int nMiniBatch      = 10;
-    float learningRate     = 0.1;
+    float learningRate     = 0.05;
     
-    int nTrainingSet    = 600;
-    int nTestSet        = 100;
+    int nTrainingSet    = 6000;
+    int nTestSet        = 1000;
     
     float errMinimum = 0.01;    
-    int maxEpoch = 1;
+    int maxEpoch = 2;
     
     //Allocate
     float **inputTraining			= new float*[nTrainingSet];
@@ -52,7 +51,7 @@ int main()
 
     MLP_Network mlp;
     
-    mlp.Allocate(nInputUnit,nHiddenUnit,nOutputUnit,nHiddenLayer,nTrainingSet);
+    //mlp.Allocate(nInputUnit,nHiddenUnit,nOutputUnit,nHiddenLayer,nTrainingSet);
 
 
     
@@ -76,18 +75,18 @@ int main()
         for (int i = 0; i < nTrainingSet; i++)
         {
             mlp.ForwardPropagateNetwork(inputTraining[i]);
-
+            
             mlp.BackwardPropagateNetwork(desiredOutputTraining[i]);
             
             sumError += mlp.CostFunction(inputTraining[i],desiredOutputTraining[i]);
-            
-            
+
             if( ((batchCount+1) % nMiniBatch) == 0)
             {
                 mlp.UpdateWeight(learningRate);
                 batchCount=0;
+            } else {
+                batchCount++;
             }
-            batchCount++;
         }
         
         sumError /= nTrainingSet;

@@ -1,5 +1,5 @@
-#ifndef MLP_Layer_H
-#define MLP_Layer_H
+#ifndef _OUTPUTLAYER_H_
+#define _OUTPUTLAYER_H_
 
 #include <iostream>
 #include <ctime>
@@ -7,28 +7,39 @@
 #include <vector>
 #include <fstream>
 
-class  MLP_Layer {
-    int nPreviousUnit;
-    int nCurrentUnit;
+class  MLP_OutputLayer {
+    int nPreviousUnit = 512;
+    int nCurrentUnit = 10;
     
     float* inputLayer;
-    float* outputLayer;
-    float* weight;
-    float* gradient;
-    float* delta;
+    float outputLayer[10];
+    float weight[5120];
+    float gradient[5120];
+    float delta[10];
     
-    float* biasWeight;    
-    float* biasGradient;
+    float biasWeight[10];    
+    float biasGradient[10];
     
 public:
-    MLP_Layer(){};
-    ~MLP_Layer()    {   Delete();   }
-    
-    void Allocate(int previous_node_num, int nCurrentUnit);
-    void Delete();
+    MLP_OutputLayer(){
+        int seed = 1;
+        srand(seed);
+        for (int j = 0; j < nCurrentUnit; j++)
+        {
+            outputLayer[j]=0.0;
+            delta[j]=0.0;
+            for (int i = 0; i < nPreviousUnit; i++)
+            {
+                weight[j*nPreviousUnit+i]   = 0.2 * rand() / RAND_MAX - 0.1;
+                gradient[j*nPreviousUnit+i]= 0.0;
+            }
+            biasWeight[j] = 0.2 * rand() / RAND_MAX - 0.1;                             
+            biasGradient[j] = 0;
+        }
+    };
+    ~MLP_OutputLayer(){};
     
     float* ForwardPropagate(float* inputLayer);
-    void BackwardPropagateHiddenLayer(MLP_Layer* previousLayer);
     void BackwardPropagateOutputLayer(float* desiredValues);
     
     void UpdateWeight(float learningRate);
@@ -51,7 +62,11 @@ public:
     float DerActivation(float net)	{ return DerActivationFromOutput(ActivationFunction(net)); }
     
     
-    
+    void test() {
+        for (int i=0; i<10; i++) {
+            std::cout << gradient[i] << " " << delta[i] << " " << biasGradient[i] << " " << outputLayer[i] << " " << weight[i] << std::endl;
+        }
+    }
 };
 
 #endif
